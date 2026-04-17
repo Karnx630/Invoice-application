@@ -38,16 +38,17 @@
         #invoice { max-width: 800px; margin: 20px auto; background: white; display: none; color: #000; border: 2px solid #000; }
         
         .inv-header { padding: 15px 20px; border-bottom: 2px solid #000; }
-        .religious-text { text-align: center; font-weight: bold; font-style: italic; font-size: 14px; position: relative; }
-        .swastik-left { position: absolute; left: 0; top: 0; font-size: 18px; font-style: normal; }
-        .swastik-right { position: absolute; right: 0; top: 0; font-size: 18px; font-style: normal; }
+        
+        /* Top Row containing PAN, Religious Text, and Mobile */
+        .top-corners-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+        .corner-text { font-weight: bold; font-size: 14px; }
+        .religious-header { text-align: center; font-weight: bold; font-size: 20px; color: #d32f2f; margin: 0; }
         
         .main-name { text-align: center; color: #000080; font-size: 42px; font-weight: 900; font-family: 'Arial Black', Impact, sans-serif; text-shadow: 2px 2px 0px #ccc; margin-top: 5px; letter-spacing: 1px; }
-        .sub-name { text-align: center; color: #2a52be; font-size: 18px; font-weight: bold; margin-top: -5px; }
+        .sub-name { text-align: center; color: #000; font-size: 18px; font-weight: bold; margin-top: -5px; }
         .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 5px; }
         
-        .pan-mob-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 5px; padding: 0 10px; }
-        .details-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 10px; padding: 0 10px; }
+        .details-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 15px; padding: 0 10px; }
         
         .out-table { width: 100%; border-collapse: collapse; border-bottom: none; }
         .out-table th { background-color: #fff !important; color: #000 !important; font-weight: bold; padding: 8px; border: 1px solid #000; border-top: 2px solid #000; text-align: center; }
@@ -142,18 +143,16 @@
 
 <div id="invoice">
     <div class="inv-header">
-        <div class="religious-text">
-            <span class="swastik-left">卐</span>
-            ShreeGaneshayNamah
-            <span class="swastik-right">卐</span>
+        <div class="top-corners-row">
+            <div class="corner-text">PAN CARD - AXEPM2410P</div>
+            <div class="religious-header">।। श्री गणेशाय नम ।।</div>
+            <div class="corner-text">M. 9228508267</div>
         </div>
+        
         <div class="main-name">Ramesh P. Mistry</div>
         <div class="sub-name">Furniture Contractor</div>
         <div class="address-text">C-7,Bhagyoday Tenament,Jivrajpark,Vejalpur Road,Ahmedabad-51</div>
-        <div class="pan-mob-row">
-            <div>PAN CARD - AXEPM2410P</div>
-            <div>M. 9228508267</div>
-        </div>
+        
         <div class="details-row">
             <div>
                 <div>Site Name :- <span id="outSiteName"></span></div>
@@ -198,7 +197,6 @@
     let history = JSON.parse(localStorage.getItem('inv_history') || '[]');
 
     window.onload = () => {
-        // Set proper date format to DD/MM/YYYY for Indian locale in outputs
         document.getElementById('invDate').valueAsDate = new Date();
         handleModeChange();
         renderHistory();
@@ -276,7 +274,6 @@
     function showInvoice(doPrint) {
         const type = document.querySelector('input[name="docType"]:checked').value;
         
-        // Populate Header Data
         document.getElementById('outDocNo').innerText = document.getElementById('docNo').value;
         document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
         document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
@@ -284,7 +281,6 @@
         
         let sub = 0;
         
-        // Ensure table has blank lines to fill up space like a physical bill block if desired
         let htmlItems = items.map((it, i) => {
             let total = it.qty * it.rate;
             sub += total;
@@ -298,7 +294,6 @@
                     </tr>`;
         });
         
-        // Optional: add empty rows for styling (makes it look like a printed bill book)
         const minRows = 10;
         for(let i = items.length; i < minRows; i++) {
             htmlItems.push(`<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>`);
@@ -306,7 +301,6 @@
 
         document.getElementById('outBody').innerHTML = htmlItems.join('');
 
-        // Handle Shipping/Total
         const ship = parseFloat(document.getElementById('shipping').value) || 0;
         const grandTotal = sub + ship;
         
@@ -402,5 +396,4 @@
 </script>
 
 </body>
-                                  </html>
-                                  
+</html>
