@@ -5,66 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Invoicer Pro - Ramesh P Mistry</title>
     
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#1a73e8">
-
     <style>
         :root { --primary: #1a73e8; --secondary: #003366; --danger: #dc3545; --success: #28a745; }
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 15px; background: #f0f2f5; color: #333; }
         
+        /* UI Panels */
         .setup-panel, .history-panel { max-width: 950px; margin: 0 auto 20px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
         label { font-weight: 800; font-size: 10px; color: #666; text-transform: uppercase; }
         input, select { padding: 12px; border: 1px solid #ccd; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; }
         
-        /* The main entry row */
         .input-row { display: grid; grid-template-columns: 3fr 1fr 1fr 1fr auto; gap: 8px; background: #f8fbff; padding: 15px; border-radius: 8px; align-items: end; margin-bottom: 15px; border: 1px solid #e0e6ed; }
         
-        /* Editable Table Styling */
         .edit-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; background: white; }
         .edit-table th { text-align: left; font-size: 11px; color: #888; padding: 8px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .edit-table td { padding: 5px; border-bottom: 1px solid #f0f0f0; }
-        .edit-table input, .edit-table select { padding: 8px; border: 1px solid transparent; border-radius: 4px; background: #f9f9f9; }
-        .edit-table input:focus, .edit-table select:focus { border-color: var(--primary); background: white; outline: none; }
-        .row-total { font-weight: bold; color: var(--secondary); font-size: 14px; text-align: right; padding-right: 10px; }
-
+        
         .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
         .btn-add { background: var(--success); color: white; width: 100%; }
         .btn-print { background: var(--primary); color: white; flex: 1; font-size: 16px; }
         .btn-clear { background: var(--danger); color: white; }
 
-        /* Invoice Output (Print) */
-        #invoice { max-width: 800px; margin: 20px auto; background: white; display: none; color: #000; border: 2px solid #000; }
+        /* Invoice Output (A4 Print Design) */
+        #invoice { 
+            width: 210mm; 
+            min-height: 297mm; 
+            margin: 20px auto; 
+            background: white; 
+            display: none; 
+            color: #000; 
+            border: 2px solid #000; 
+            box-sizing: border-box;
+            position: relative;
+            padding: 0;
+        }
         
-        .inv-header { padding: 15px 20px; border-bottom: 2px solid #000; }
-        
-        /* Top Row containing PAN, Religious Text, and Mobile */
-        .top-corners-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-        .corner-text { font-weight: bold; font-size: 14px; }
-        .religious-header { text-align: center; font-weight: bold; font-size: 20px; color: #d32f2f; margin: 0; }
-        
-        .main-name { text-align: center; color: #000080; font-size: 42px; font-weight: 900; font-family: 'Arial Black', Impact, sans-serif; text-shadow: 2px 2px 0px #ccc; margin-top: 5px; letter-spacing: 1px; }
-        .sub-name { text-align: center; color: #000; font-size: 18px; font-weight: bold; margin-top: -5px; }
-        .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 5px; }
-        
-        .details-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 14px; margin-top: 15px; padding: 0 10px; }
-        
-        .out-table { width: 100%; border-collapse: collapse; border-bottom: none; }
-        .out-table th { background-color: #fff !important; color: #000 !important; font-weight: bold; padding: 8px; border: 1px solid #000; border-top: 2px solid #000; text-align: center; }
-        .out-table td { border: 1px solid #000; padding: 8px; text-align: center; }
-        .out-table td:nth-child(2) { text-align: left; }
-        
-        .footer-row th { background: #fff !important; color: #000 !important; font-size: 16px; padding: 10px; text-align: center; }
-        .footer-amount { font-weight: bold; font-size: 16px; padding: 10px; text-align: right; border: 1px solid #000; }
+        .inv-content { padding: 30px; }
 
-        .history-row { cursor: pointer; }
-        .history-row:hover { background: #f8fbff; }
+        .top-corners-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .corner-text { font-weight: bold; font-size: 13px; }
+        .religious-header { text-align: center; font-weight: bold; font-size: 22px; color: #d32f2f; margin: 0; flex-grow: 1; }
+        
+        .main-name { text-align: center; color: #000080; font-size: 48px; font-weight: 900; font-family: 'Arial Black', Impact, sans-serif; text-shadow: 2px 2px 0px #eee; margin-top: 10px; letter-spacing: 1px; }
+        .sub-name { text-align: center; color: #000; font-size: 20px; font-weight: bold; margin-top: -5px; text-transform: uppercase; }
+        .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 8px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        
+        /* Spacing for Site and Address */
+        .details-row { display: flex; justify-content: space-between; font-weight: bold; font-size: 15px; margin-top: 25px; margin-bottom: 25px; padding: 0 5px; }
+        .detail-line { margin-bottom: 12px; display: flex; gap: 10px; }
+        .detail-label { min-width: 100px; }
+
+        .out-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
+        .out-table th { background: #fff; padding: 12px 8px; border: 1px solid #000; font-size: 14px; }
+        .out-table td { border: 1px solid #000; padding: 10px 8px; text-align: center; font-size: 14px; height: 30px; }
+        .out-table td:nth-child(2) { text-align: left; font-weight: bold; }
+        
+        .footer-row th { text-align: right; padding: 12px; border: 1px solid #000; font-size: 16px; }
+        .footer-amount { font-weight: bold; font-size: 18px; padding: 12px; text-align: right; border: 1px solid #000; }
+
+        /* Signature Section */
+        .signature-section { margin-top: 60px; display: flex; justify-content: flex-end; padding-right: 20px; }
+        .sig-box { text-align: center; width: 220px; }
+        .sig-line { border-top: 2px solid #000; margin-top: 50px; padding-top: 5px; font-weight: bold; font-size: 14px; }
 
         @media print {
+            @page { size: A4; margin: 0; }
             body { padding: 0; background: #fff; }
-            .setup-panel, .history-panel, .action-bar, .btn-clear { display: none !important; }
-            #invoice { display: block !important; border: 2px solid #000; padding: 0; margin: 0; width: 100%; max-width: 100%; }
+            .setup-panel, .history-panel, .action-bar { display: none !important; }
+            #invoice { display: block !important; margin: 0; border: none; width: 100%; height: 100%; }
         }
     </style>
 </head>
@@ -74,324 +82,164 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 style="margin:0; color: var(--secondary);">Invoice Pro</h2>
         <div style="background:#f0f2f5; padding:8px 15px; border-radius:20px; display:flex; gap:15px;">
-            <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice</label>
-            <label style="display:flex; align-items:center; gap:5px; cursor:pointer;"><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate</label>
+            <label><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice</label>
+            <label><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate</label>
         </div>
     </div>
 
-    <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; margin-bottom: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px;">
         <div class="input-group"><label id="numLabel">Bill No.</label><input type="text" id="docNo"></div>
-        <div class="input-group"><label>Site Name</label><input type="text" id="siteName" placeholder="e.g. Aranyam"></div>
+        <div class="input-group"><label>Site Name</label><input type="text" id="siteName" placeholder="Client or Project Name"></div>
         <div class="input-group"><label>Date</label><input type="date" id="invDate"></div>
     </div>
     
-    <div style="margin-bottom: 20px;">
-        <div class="input-group"><label>Address</label><input type="text" id="siteAddress" placeholder="e.g. Shilaj"></div>
+    <div class="input-group" style="margin-top: 10px;">
+        <label>Site Address</label>
+        <input type="text" id="siteAddress" placeholder="Enter full site address">
     </div>
 
-    <div class="input-row">
-        <div class="input-group"><label>Description</label><input type="text" id="t-desc" placeholder="Item Name"></div>
-        <div class="input-group">
-            <label>Unit</label>
-            <select id="t-unit">
-                <option value="Nos">Nos</option>
-                <option value="Sqft">Sqft</option>
-            </select>
-        </div>
+    <div class="input-row" style="margin-top: 20px;">
+        <div class="input-group"><label>Description</label><input type="text" id="t-desc"></div>
+        <div class="input-group"><label>Unit</label><select id="t-unit"><option>Nos</option><option>Sqft</option><option>Rft</option></select></div>
         <div class="input-group"><label>Qty</label><input type="number" id="t-qty" value="1"></div>
-        <div class="input-group"><label>Rate</label><input type="number" id="t-rate" placeholder="0"></div>
+        <div class="input-group"><label>Rate</label><input type="number" id="t-rate"></div>
         <button class="btn btn-add" onclick="addItem()">ADD</button>
     </div>
 
     <table class="edit-table">
-        <thead>
-            <tr>
-                <th style="width: 45%;">Description</th>
-                <th>Unit</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th style="text-align:right">Amount</th>
-                <th style="width: 40px;"></th>
-            </tr>
-        </thead>
-        <tbody id="editableBody">
-        </tbody>
+        <thead><tr><th>Item</th><th>Unit</th><th>Qty</th><th>Rate</th><th style="text-align:right">Total</th><th></th></tr></thead>
+        <tbody id="editableBody"></tbody>
     </table>
 
     <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 15px;">
-        <div class="input-group"><label>Shipping/Other</label><input type="number" id="shipping" value="0" oninput="calculateLiveTotal()"></div>
-        <div class="input-group"><label>Special Note</label><input type="text" id="note" placeholder="Optional notes..."></div>
-    </div>
-
-    <div style="text-align: right; margin-top: 10px; font-size: 18px; font-weight: bold;">
-        Current Total: <span id="liveGrandTotal">₹0.00</span>
+        <div class="input-group"><label>Other Charges</label><input type="number" id="shipping" value="0" oninput="renderItemList()"></div>
+        <div class="input-group"><label>Notes</label><input type="text" id="note"></div>
     </div>
 
     <div class="action-bar" style="display: flex; gap: 10px; margin-top: 20px;">
         <button class="btn btn-print" style="background:#666" onclick="showInvoice(false)">Preview</button>
         <button class="btn btn-print" onclick="showInvoice(true)">Print & Save</button>
-        <button class="btn btn-clear" onclick="resetForm()">New Bill</button>
+        <button class="btn btn-clear" onclick="if(confirm('Reset?')) location.reload()">New Bill</button>
     </div>
 </div>
 
-<div class="history-panel">
-    <label style="margin-bottom: 10px; display:block;">Recent History</label>
-    <table class="history-table" style="width:100%; border-collapse: collapse;">
-        <tbody id="historyBody"></tbody>
-    </table>
-</div>
-
 <div id="invoice">
-    <div class="inv-header">
+    <div class="inv-content">
         <div class="top-corners-row">
-            <div class="corner-text">PAN CARD - AXEPM2410P</div>
+            <div class="corner-text">PAN: AXEPM2410P</div>
             <div class="religious-header">।। श्री गणेशाय नम ।।</div>
             <div class="corner-text">M. 9228508267</div>
         </div>
         
         <div class="main-name">Ramesh P. Mistry</div>
         <div class="sub-name">Furniture Contractor</div>
-        <div class="address-text">C-7,Bhagyoday Tenament,Jivrajpark,Vejalpur Road,Ahmedabad-51</div>
+        <div class="address-text">
+            C-7, Bhagyoday Tenement, Jivraj Park, Vejalpur Road, Ahmedabad - 380051
+        </div>
         
         <div class="details-row">
-            <div>
-                <div>Site Name :- <span id="outSiteName"></span></div>
-                <div>Address :- <span id="outSiteAddress"></span></div>
+            <div style="max-width: 60%;">
+                <div class="detail-line"><span class="detail-label">Site Name :-</span> <span id="outSiteName" style="border-bottom: 1px dotted #000; flex-grow:1;"></span></div>
+                <div class="detail-line"><span class="detail-label">Address :-</span> <span id="outSiteAddress" style="border-bottom: 1px dotted #000; flex-grow:1;"></span></div>
             </div>
             <div style="text-align: right;">
-                <div>Date :- <span id="outDate"></span></div>
-                <div>Bill No :- <span id="outDocNo"></span></div>
+                <div class="detail-line"><span>Date :-</span> <span id="outDate" style="min-width: 100px; display: inline-block; border-bottom: 1px dotted #000;"></span></div>
+                <div class="detail-line"><span>Bill No :-</span> <span id="outDocNo" style="min-width: 100px; display: inline-block; border-bottom: 1px dotted #000;"></span></div>
+            </div>
+        </div>
+
+        <table class="out-table">
+            <thead>
+                <tr>
+                    <th width="50">Sr.</th>
+                    <th>Description</th>
+                    <th width="60">Unit</th>
+                    <th width="60">Qty</th>
+                    <th width="100">Rate</th>
+                    <th width="120">Amount</th>
+                </tr>
+            </thead>
+            <tbody id="outBody"></tbody>
+            <tfoot>
+                <tr id="outShipRow" style="display:none;">
+                    <th colspan="5">Extra Charges</th>
+                    <th class="footer-amount" id="outShipVal"></th>
+                </tr>
+                <tr>
+                    <th colspan="5">TOTAL AMOUNT</th>
+                    <th class="footer-amount" id="outGrand"></th>
+                </tr>
+            </tfoot>
+        </table>
+        
+        <div id="outNote" style="margin-top: 20px; font-style: italic; font-size: 13px;"></div>
+
+        <div class="signature-section">
+            <div class="sig-box">
+                <div class="sig-line">Signature of Contractor</div>
             </div>
         </div>
     </div>
-
-    <table class="out-table">
-        <thead>
-            <tr>
-                <th>Sr<br>No</th>
-                <th>Description</th>
-                <th>Unit</th>
-                <th>Qty</th>
-                <th>Rate</th>
-                <th>Amount</th>
-            </tr>
-        </thead>
-        <tbody id="outBody"></tbody>
-        <tfoot>
-            <tr class="footer-row">
-                <th colspan="5">TOTAL AMOUNT</th>
-                <th class="footer-amount" id="outGrand"></th>
-            </tr>
-            <tr id="outShipRow" style="display:none;">
-                <th colspan="5" style="text-align: right; border-right: 1px solid #000; font-size:12px;">+ Shipping/Other</th>
-                <th class="footer-amount" id="outShipVal" style="font-size:12px;"></th>
-            </tr>
-        </tfoot>
-    </table>
-    
-    <div id="outNote" style="padding: 10px; font-style: italic;"></div>
 </div>
 
 <script>
     let items = [];
-    let history = JSON.parse(localStorage.getItem('inv_history') || '[]');
-
-    window.onload = () => {
-        document.getElementById('invDate').valueAsDate = new Date();
-        handleModeChange();
-        renderHistory();
-    };
+    window.onload = () => { document.getElementById('invDate').valueAsDate = new Date(); handleModeChange(); };
 
     function handleModeChange() {
         const type = document.querySelector('input[name="docType"]:checked').value;
-        const countKey = type === 'invoice' ? 'count_inv' : 'count_est';
         document.getElementById('numLabel').innerText = type === 'invoice' ? "Bill No." : "Est No.";
-        document.getElementById('docNo').value = localStorage.getItem(countKey) || '';
     }
 
     function addItem() {
         const desc = document.getElementById('t-desc').value;
         if(!desc) return;
-        
         items.push({
-            desc,
-            unit: document.getElementById('t-unit').value,
-            qty: parseFloat(document.getElementById('t-qty').value) || 1,
+            desc, unit: document.getElementById('t-unit').value,
+            qty: parseFloat(document.getElementById('t-qty').value) || 0,
             rate: parseFloat(document.getElementById('t-rate').value) || 0
         });
-
         document.getElementById('t-desc').value = '';
-        document.getElementById('t-qty').value = '1';
         document.getElementById('t-rate').value = '';
-        
-        renderItemList();
-    }
-
-    function updateItem(index, field, value) {
-        items[index][field] = (field === 'desc' || field === 'unit') ? value : parseFloat(value) || 0;
         renderItemList();
     }
 
     function renderItemList() {
         const tbody = document.getElementById('editableBody');
-        let grand = 0;
-
+        let total = 0;
         tbody.innerHTML = items.map((it, i) => {
-            let rowTotal = it.qty * it.rate;
-            grand += rowTotal;
-
-            return `
-                <tr>
-                    <td><input type="text" value="${it.desc}" onchange="updateItem(${i}, 'desc', this.value)"></td>
-                    <td>
-                        <select onchange="updateItem(${i}, 'unit', this.value)">
-                            <option value="Nos" ${it.unit === 'Nos' ? 'selected' : ''}>Nos</option>
-                            <option value="Sqft" ${it.unit === 'Sqft' ? 'selected' : ''}>Sqft</option>
-                        </select>
-                    </td>
-                    <td><input type="number" value="${it.qty}" onchange="updateItem(${i}, 'qty', this.value)"></td>
-                    <td><input type="number" value="${it.rate}" onchange="updateItem(${i}, 'rate', this.value)"></td>
-                    <td class="row-total">₹${rowTotal.toFixed(2)}</td>
-                    <td><span style="color:red; cursor:pointer; font-weight:bold;" onclick="items.splice(${i},1);renderItemList()">✕</span></td>
-                </tr>
-            `;
+            let rowT = it.qty * it.rate;
+            total += rowT;
+            return `<tr><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">₹${rowT.toFixed(2)}</td><td><span onclick="items.splice(${i},1);renderItemList()" style="color:red; cursor:pointer;">✕</span></td></tr>`;
         }).join('');
-
-        const ship = parseFloat(document.getElementById('shipping').value) || 0;
-        document.getElementById('liveGrandTotal').innerText = "₹" + (grand + ship).toFixed(2);
-    }
-
-    function calculateLiveTotal() {
-        renderItemList(); 
-    }
-
-    function formatDate(dateStr) {
-        if(!dateStr) return "";
-        const parts = dateStr.split('-');
-        return `${parts[2]}/${parts[1]}/${parts[0]}`;
     }
 
     function showInvoice(doPrint) {
-        const type = document.querySelector('input[name="docType"]:checked').value;
-        
         document.getElementById('outDocNo').innerText = document.getElementById('docNo').value;
         document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
         document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
-        document.getElementById('outDate').innerText = formatDate(document.getElementById('invDate').value);
+        document.getElementById('outDate').innerText = document.getElementById('invDate').value.split('-').reverse().join('/');
         
         let sub = 0;
-        
-        let htmlItems = items.map((it, i) => {
-            let total = it.qty * it.rate;
-            sub += total;
-            return `<tr>
-                        <td>${i+1}</td>
-                        <td>${it.desc}</td>
-                        <td>${it.unit}</td>
-                        <td>${it.qty}</td>
-                        <td>${it.rate}</td>
-                        <td style="text-align: right;">${total.toFixed(2)}</td>
-                    </tr>`;
+        let html = items.map((it, i) => {
+            let amt = it.qty * it.rate; sub += amt;
+            return `<tr><td>${i+1}</td><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>`;
         });
         
-        const minRows = 10;
-        for(let i = items.length; i < minRows; i++) {
-            htmlItems.push(`<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>`);
-        }
-
-        document.getElementById('outBody').innerHTML = htmlItems.join('');
-
-        const ship = parseFloat(document.getElementById('shipping').value) || 0;
-        const grandTotal = sub + ship;
+        for(let i=items.length; i<12; i++) html.push('<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>');
         
-        document.getElementById('outGrand').innerText = "₹ " + grandTotal.toFixed(2);
+        document.getElementById('outBody').innerHTML = html.join('');
+        const extra = parseFloat(document.getElementById('shipping').value) || 0;
+        document.getElementById('outGrand').innerText = "₹ " + (sub + extra).toFixed(2);
         
-        const shipRow = document.getElementById('outShipRow');
-        if (ship > 0) {
-            shipRow.style.display = 'table-row';
-            document.getElementById('outShipVal').innerText = "₹ " + ship.toFixed(2);
-        } else {
-            shipRow.style.display = 'none';
+        if(extra > 0) {
+            document.getElementById('outShipRow').style.display = 'table-row';
+            document.getElementById('outShipVal').innerText = extra.toFixed(2);
         }
 
         document.getElementById('outNote').innerText = document.getElementById('note').value ? "Note: " + document.getElementById('note').value : "";
-        
         document.getElementById('invoice').style.display = 'block';
-
-        if(doPrint) {
-            saveToHistory(type, grandTotal);
-            setTimeout(() => window.print(), 300);
-        }
-    }
-
-    function saveToHistory(type, total) {
-        const entry = {
-            no: document.getElementById('docNo').value,
-            siteName: document.getElementById('siteName').value,
-            siteAddress: document.getElementById('siteAddress').value,
-            date: document.getElementById('invDate').value,
-            total: total.toFixed(2),
-            type: type,
-            items: JSON.parse(JSON.stringify(items)),
-            shipping: document.getElementById('shipping').value,
-            note: document.getElementById('note').value
-        };
-        history = history.filter(h => !(h.no === entry.no && h.type === entry.type));
-        history.push(entry);
-        localStorage.setItem('inv_history', JSON.stringify(history));
-        renderHistory();
-    }
-
-    function renderHistory() {
-        const b = document.getElementById('historyBody');
-        b.innerHTML = history.slice().reverse().map((h, i) => `
-            <tr class="history-row" onclick="loadHistory(${history.length - 1 - i})">
-                <td style="padding:10px; border-bottom:1px solid #eee;"><b>${h.type.toUpperCase()} #${h.no}</b><br><small>${formatDate(h.date)}</small></td>
-                <td style="padding:10px; border-bottom:1px solid #eee;">${h.siteName || '-'}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right;">₹${h.total}</td>
-                <td style="padding:10px; border-bottom:1px solid #eee; text-align:right; color:red;" onclick="event.stopPropagation(); deleteRecord(${history.length - 1 - i})">🗑️</td>
-            </tr>
-        `).join('');
-    }
-
-    function loadHistory(idx) {
-        const h = history[idx];
-        document.getElementById('siteName').value = h.siteName || '';
-        document.getElementById('siteAddress').value = h.siteAddress || '';
-        document.getElementById('docNo').value = h.no;
-        document.getElementById('invDate').value = h.date;
-        document.getElementById('shipping').value = h.shipping;
-        document.getElementById('note').value = h.note;
-        items = JSON.parse(JSON.stringify(h.items));
-        renderItemList();
-    }
-
-    function deleteRecord(idx) {
-        if(confirm("Delete this record?")) {
-            history.splice(idx, 1);
-            localStorage.setItem('inv_history', JSON.stringify(history));
-            renderHistory();
-        }
-    }
-
-    function resetForm() {
-        if(confirm("Start new bill?")) {
-            const type = document.querySelector('input[name="docType"]:checked').value;
-            const countKey = type === 'invoice' ? 'count_inv' : 'count_est';
-            let currentNo = parseInt(document.getElementById('docNo').value) || 1000;
-            localStorage.setItem(countKey, currentNo + 1);
-            location.reload();
-        }
-    }
-</script>
-
-<script>
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js')
-                .then(reg => console.log('Service Worker Registered!', reg))
-                .catch(err => console.error('Service Worker Registration Failed:', err));
-        });
+        if(doPrint) setTimeout(() => window.print(), 300);
     }
 </script>
 
