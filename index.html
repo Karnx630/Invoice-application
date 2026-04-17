@@ -1,6 +1,3 @@
-To make sure "INVOICE" appears clearly when selected, I've updated the showInvoice function. It now checks the document type and applies the correct label—including the "Written" subtitle for estimates and a bold "INVOICE" for standard bills.
-I also added a call to update this label immediately when you toggle the switch, so the preview stays accurate.
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,7 +20,7 @@ I also added a call to update this label immediately when you toggle the switch,
         label { font-weight: 800; font-size: 10px; color: #666; text-transform: uppercase; }
         input, select { padding: 12px; border: 1px solid #ccd; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; }
         
-        /* Inline Editable Table */
+        /* Data Entry Table */
         .edit-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         .edit-table th { text-align: left; font-size: 11px; color: #888; padding: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .edit-table td { padding: 5px; border-bottom: 1px solid #f0f0f0; }
@@ -35,7 +32,7 @@ I also added a call to update this label immediately when you toggle the switch,
         .btn-print { background: var(--primary); color: white; flex: 1; font-size: 16px; }
         .btn-install { background: #333; color: white; display: none; margin-bottom: 15px; width: 100%; }
 
-        /* A4 Print Styles */
+        /* Professional A4 Print Design */
         #invoice { 
             width: 210mm; min-height: 297mm; margin: 20px auto; background: white; 
             display: none; color: #000; border: 2px solid #000; box-sizing: border-box;
@@ -46,12 +43,8 @@ I also added a call to update this label immediately when you toggle the switch,
         
         .main-name { text-align: center; color: #000080; font-size: 48px; font-weight: 900; margin-top: 10px; font-family: 'Arial Black', sans-serif; }
         .sub-name { text-align: center; color: #000; font-size: 20px; font-weight: bold; margin-top: -5px; text-transform: uppercase; }
-        .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 8px; border-bottom: 2px solid #000; padding-bottom: 15px; }
+        .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 8px; border-bottom: 2px solid #000; padding-bottom: 25px; margin-bottom: 10px; }
         
-        /* Centered Document Type Label */
-        #docTypeLabel { text-align: center; margin-top: 15px; font-weight: bold; letter-spacing: 2px; height: 40px; font-size: 18px; text-decoration: underline; }
-        #docTypeLabel small { font-size: 12px; font-weight: normal; display: block; letter-spacing: 1px; text-decoration: none; }
-
         .details-row { display: flex; justify-content: space-between; margin: 25px 0; font-weight: bold; }
         .out-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
         .out-table th, .out-table td { border: 1px solid #000; padding: 10px; text-align: center; }
@@ -72,13 +65,13 @@ I also added a call to update this label immediately when you toggle the switch,
 <body>
 
 <div class="setup-panel">
-    <button id="btnInstall" class="btn btn-install">📥 INSTALL INVOICER TO DESKTOP</button>
+    <button id="btnInstall" class="btn btn-install">📥 INSTALL TO DESKTOP</button>
 
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 style="margin:0; color: var(--secondary);">Invoicer Pro</h2>
         <div style="background:#f0f2f5; padding:8px 15px; border-radius:20px; display:flex; gap:15px;">
-            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice</label>
-            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate</label>
+            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice Mode</label>
+            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate Mode</label>
         </div>
     </div>
 
@@ -120,8 +113,6 @@ I also added a call to update this label immediately when you toggle the switch,
         <div class="sub-name">Furniture Contractor</div>
         <div class="address-text">C-7, Bhagyoday Tenement, Jivraj Park, Vejalpur Road, Ahmedabad - 380051</div>
         
-        <div id="docTypeLabel"></div>
-
         <div class="details-row">
             <div style="width: 60%;">
                 <div style="margin-bottom: 10px;">Site Name : <span id="outSiteName" style="border-bottom:1px dotted #000; display:inline-block; min-width: 200px;"></span></div>
@@ -129,7 +120,7 @@ I also added a call to update this label immediately when you toggle the switch,
             </div>
             <div style="text-align: right;">
                 <div style="margin-bottom: 10px;">Date : <span id="outDate"></span></div>
-                <div>No : <span id="outDocNo"></span></div>
+                <div><span id="outTypeLabel">No</span> : <span id="outDocNo"></span></div>
             </div>
         </div>
 
@@ -149,6 +140,7 @@ I also added a call to update this label immediately when you toggle the switch,
     let items = [];
     let deferredPrompt;
 
+    // GitHub Install Logic
     window.addEventListener('beforeinstallprompt', (e) => {
         e.preventDefault();
         deferredPrompt = e;
@@ -205,15 +197,9 @@ I also added a call to update this label immediately when you toggle the switch,
 
     function showInvoice(doPrint) {
         const type = document.querySelector('input[name="docType"]:checked').value;
-        const labelBox = document.getElementById('docTypeLabel');
         
-        // Update label based on selection
-        if (type === 'estimate') {
-            labelBox.innerHTML = 'ESTIMATE<small>(Written)</small>';
-        } else {
-            labelBox.innerHTML = 'INVOICE';
-        }
-
+        // Update detail labels without showing main "Invoice/Estimate" header
+        document.getElementById('outTypeLabel').innerText = type === 'invoice' ? "Bill No" : "Est No";
         document.getElementById('outDocNo').innerText = document.getElementById('docNo').value;
         document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
         document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
@@ -238,12 +224,10 @@ I also added a call to update this label immediately when you toggle the switch,
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW failed', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration failed', err));
         });
     }
 </script>
 
 </body>
 </html>
-
-```
