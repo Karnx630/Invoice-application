@@ -14,70 +14,54 @@
         :root { --primary: #1a73e8; --secondary: #003366; --danger: #dc3545; --success: #28a745; }
         body { font-family: 'Segoe UI', Arial, sans-serif; margin: 0; padding: 15px; background: #f0f2f5; color: #333; }
         
-        /* UI Panels */
         .setup-panel { max-width: 950px; margin: 0 auto 20px auto; background: white; padding: 20px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
         .input-group { display: flex; flex-direction: column; gap: 5px; margin-bottom: 10px; }
         label { font-weight: 800; font-size: 10px; color: #666; text-transform: uppercase; }
         input, select { padding: 12px; border: 1px solid #ccd; border-radius: 8px; font-size: 14px; width: 100%; box-sizing: border-box; }
         
-        /* Data Entry Table */
         .edit-table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
         .edit-table th { text-align: left; font-size: 11px; color: #888; padding: 10px; text-transform: uppercase; border-bottom: 2px solid #eee; }
         .edit-table td { padding: 5px; border-bottom: 1px solid #f0f0f0; }
         .edit-table input { padding: 8px; border: 1px solid transparent; background: #f9f9f9; border-radius: 4px; width: 100%; }
-        .edit-table input:focus { border-color: var(--primary); background: white; outline: none; }
-
-        .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        
+        .btn { padding: 12px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; }
         .btn-add { background: var(--success); color: white; }
         .btn-print { background: var(--primary); color: white; flex: 1; font-size: 16px; }
         .btn-install { background: #333; color: white; display: none; margin-bottom: 15px; width: 100%; }
-        
-        /* History Database Table */
-        .history-section { margin-top: 30px; border-top: 2px solid #eee; padding-top: 20px; }
-        .history-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .history-table th, .history-table td { padding: 10px; text-align: left; border-bottom: 1px solid #eee; font-size: 13px; }
-        .history-table tr:hover { background: #f8fbff; cursor: pointer; }
-        .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 4px; border: none; cursor: pointer; font-weight: bold; }
 
-        /* Professional A4 Print Design */
-        #invoice { 
-            width: 210mm; min-height: 297mm; margin: 20px auto; background: white; 
-            display: none; color: #000; border: 2px solid #000; box-sizing: border-box;
-            position: relative;
-        }
+        /* History Table Styles */
+        .history-table { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 14px; }
+        .history-table th, .history-table td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+        .btn-sm { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
+
+        /* Print Layout */
+        #invoice { width: 210mm; min-height: 297mm; margin: 20px auto; background: white; display: none; color: #000; border: 2px solid #000; box-sizing: border-box; }
         .inv-content { padding: 30px; }
         .top-corners-row { display: flex; justify-content: space-between; align-items: flex-start; }
         .religious-header { text-align: center; font-weight: bold; font-size: 22px; color: #d32f2f; flex-grow: 1; }
-        
         .main-name { text-align: center; color: #000080; font-size: 48px; font-weight: 900; margin-top: 10px; font-family: 'Arial Black', sans-serif; }
         .sub-name { text-align: center; color: #000; font-size: 20px; font-weight: bold; margin-top: -5px; text-transform: uppercase; }
         .address-text { text-align: center; font-weight: bold; font-size: 14px; margin-top: 8px; border-bottom: 2px solid #000; padding-bottom: 25px; margin-bottom: 10px; }
-        
         .details-row { display: flex; justify-content: space-between; margin: 25px 0; font-weight: bold; }
+        
         .out-table { width: 100%; border-collapse: collapse; border: 2px solid #000; }
         .out-table th, .out-table td { border: 1px solid #000; padding: 10px; text-align: center; }
         .out-table td:nth-child(2) { text-align: left; }
         .footer-amount { font-weight: bold; font-size: 18px; text-align: right; }
 
+        /* Signature layout */
         .signature-section { margin-top: 80px; display: flex; justify-content: flex-end; }
-        /* The signature box updated to support images overlapping it */
         .sig-box { position: relative; text-align: center; width: 220px; border-top: 2px solid #000; padding-top: 5px; font-weight: bold; }
-
-        /* Floating Back Button for Preview Mode */
-        #backBtn { display: none; position: fixed; top: 20px; left: 20px; background: var(--danger); color: white; padding: 12px 24px; border: none; border-radius: 30px; font-weight: bold; font-size: 16px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3); z-index: 9999; }
 
         @media print {
             @page { size: A4; margin: 0; }
             body { padding: 0; background: #fff; }
-            #setupPanel, .btn-install, #backBtn { display: none !important; }
+            #setupPanel { display: none !important; }
             #invoice { display: block !important; margin: 0; border: none; width: 100%; height: 100%; }
         }
     </style>
 </head>
 <body>
-
-<!-- Floating Back Button (Appears during Preview) -->
-<button id="backBtn" onclick="closePreview()">⬅️ Back to Editor</button>
 
 <div class="setup-panel" id="setupPanel">
     <button id="btnInstall" class="btn btn-install">📥 INSTALL TO DESKTOP</button>
@@ -85,8 +69,8 @@
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 style="margin:0; color: var(--secondary);">Invoicer Pro</h2>
         <div style="background:#f0f2f5; padding:8px 15px; border-radius:20px; display:flex; gap:15px;">
-            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice Mode</label>
-            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate Mode</label>
+            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="invoice" checked onchange="handleModeChange()"> Invoice</label>
+            <label style="font-size: 12px; cursor:pointer;"><input type="radio" name="docType" value="estimate" onchange="handleModeChange()"> Estimate</label>
         </div>
     </div>
 
@@ -110,15 +94,8 @@
         <tbody id="editableBody"></tbody>
     </table>
 
-    <!-- Digital Signature Control Panel -->
     <div style="display: flex; gap: 20px; align-items: center; background: #e9ecef; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
-        <label style="font-size: 13px; cursor:pointer; font-weight: bold; display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="showSign" checked style="width: auto;"> Include Digital Signature
-        </label>
-        <div class="input-group" style="margin: 0; flex-direction: row; align-items: center;">
-            <label style="margin: 0; padding-right: 5px;">Upload Custom Sign (Optional):</label>
-            <input type="file" accept="image/*" style="font-size: 12px; padding: 5px; width: auto;" onchange="loadSignature(event)">
-        </div>
+        <label style="font-size: 13px; cursor:pointer; font-weight: bold;"><input type="checkbox" id="showSign" checked> Include Signature</label>
     </div>
 
     <div class="action-bar" style="display: flex; gap: 10px;">
@@ -126,28 +103,18 @@
         <button class="btn btn-print" onclick="showInvoice(true)">Print & Save</button>
     </div>
 
-    <!-- Database History Section -->
-    <div class="history-section">
-        <h3 style="margin: 0 0 10px 0; color: var(--secondary);">Saved Invoices Database</h3>
+    <div style="margin-top: 40px; border-top: 2px solid #eee; padding-top: 20px;">
+        <h3 style="color: var(--secondary); margin-bottom: 10px;">Previous Invoices</h3>
         <table class="history-table">
-            <thead>
-                <tr>
-                    <th>Type</th>
-                    <th>No.</th>
-                    <th>Site Name</th>
-                    <th>Date</th>
-                    <th>Amount</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody id="historyBody">
-                <tr><td colspan="6" style="text-align: center; color: #888;">Loading history...</td></tr>
-            </tbody>
+            <thead><tr><th>No.</th><th>Site Name</th><th>Date</th><th>Amount</th><th>Action</th></tr></thead>
+            <tbody id="historyBody"></tbody>
         </table>
     </div>
 </div>
 
 <div id="invoice">
+    <button onclick="closePreview()" style="position: absolute; top: -40px; left: 0; padding: 10px; background: red; color: white; border: none; cursor: pointer; border-radius: 5px;" class="no-print">Close Preview</button>
+    
     <div class="inv-content">
         <div class="top-corners-row">
             <div style="font-weight:bold; font-size: 14px;">PAN: AXEPM2410P</div>
@@ -180,10 +147,7 @@
 
         <div class="signature-section">
             <div class="sig-box">
-                <!-- IMPORTANT: The 'src' here points to the signature.png file you uploaded to GitHub -->
-                <img id="outSignImage" src="./signature.png" 
-                     onerror="this.onerror=null; this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 150 50\'><text x=\'75\' y=\'35\' font-size=\'28\' font-family=\'cursive\' fill=\'%23000080\' text-anchor=\'middle\'>R.P. Mistry</text></svg>'" 
-                     style="max-height: 60px; max-width: 200px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none;">
+                <img id="outSignImage" src="./signature.png" style="max-height: 60px; max-width: 200px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none;">
                 Signature of Contractor
             </div>
         </div>
@@ -192,68 +156,37 @@
 
 <script>
     let items = [];
-    let deferredPrompt;
 
     window.onload = () => { 
-        try {
-            document.getElementById('invDate').valueAsDate = new Date(); 
-            renderHistoryTable(); // Load database on startup
-        } catch(e) {
-            console.error("Startup error:", e);
-        }
+        document.getElementById('invDate').valueAsDate = new Date(); 
+        loadHistoryTable();
     };
 
-    // Service Worker Installation
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        const btn = document.getElementById('btnInstall');
-        if(btn) btn.style.display = 'block';
-    });
-
-    document.getElementById('btnInstall')?.addEventListener('click', async () => {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            const { outcome } = await deferredPrompt.userChoice;
-            if (outcome === 'accepted') document.getElementById('btnInstall').style.display = 'none';
-            deferredPrompt = null;
-        }
-    });
-
     function handleModeChange() {
-        try {
-            const typeElem = document.querySelector('input[name="docType"]:checked');
-            if(typeElem) {
-                document.getElementById('numLabel').innerText = typeElem.value === 'invoice' ? "Bill No." : "Est No.";
-            }
-        } catch(e) { alert("Error changing mode: " + e.message); }
+        const type = document.querySelector('input[name="docType"]:checked').value;
+        document.getElementById('numLabel').innerText = type === 'invoice' ? "Bill No." : "Est No.";
     }
 
     function addItem() {
-        try {
-            const desc = document.getElementById('t-desc').value;
-            if(!desc) return;
-            items.push({
-                desc: desc, 
-                unit: document.getElementById('t-unit').value,
-                qty: parseFloat(document.getElementById('t-qty').value) || 0,
-                rate: parseFloat(document.getElementById('t-rate').value) || 0
-            });
-            document.getElementById('t-desc').value = '';
-            document.getElementById('t-rate').value = '';
-            renderItemList();
-        } catch(e) { alert("Error adding item: " + e.message); }
+        const desc = document.getElementById('t-desc').value;
+        if(!desc) return;
+        items.push({
+            desc, unit: document.getElementById('t-unit').value,
+            qty: parseFloat(document.getElementById('t-qty').value) || 0,
+            rate: parseFloat(document.getElementById('t-rate').value) || 0
+        });
+        document.getElementById('t-desc').value = '';
+        document.getElementById('t-rate').value = '';
+        renderItemList();
     }
 
     function updateInlineItem(index, field, value) {
-        if(!items[index]) return;
         items[index][field] = (field === 'desc' || field === 'unit') ? value : parseFloat(value) || 0;
         renderItemList();
     }
 
     function renderItemList() {
         const tbody = document.getElementById('editableBody');
-        if(!tbody) return;
         tbody.innerHTML = items.map((it, i) => `
             <tr>
                 <td><input type="text" value="${it.desc}" oninput="updateInlineItem(${i}, 'desc', this.value)"></td>
@@ -266,147 +199,112 @@
         `).join('');
     }
 
-    function loadSignature(event) {
-        try {
-            const reader = new FileReader();
-            reader.onload = function(){
-                document.getElementById('outSignImage').src = reader.result;
-            };
-            if(event.target.files && event.target.files[0]){
-                reader.readAsDataURL(event.target.files[0]);
-            }
-        } catch(e) { alert("Error loading signature: " + e.message); }
-    }
-
-    // Explicit function to hide preview safely
     function closePreview() {
         document.getElementById('invoice').style.display = 'none';
         document.getElementById('setupPanel').style.display = 'block';
-        document.getElementById('backBtn').style.display = 'none';
-        window.scrollTo(0, 0);
     }
 
     function showInvoice(doPrint) {
-        try {
-            // Get values
-            const type = document.querySelector('input[name="docType"]:checked').value;
-            const docNo = document.getElementById('docNo').value;
-            const siteName = document.getElementById('siteName').value;
-            const siteAddress = document.getElementById('siteAddress').value;
-            const invDate = document.getElementById('invDate').value;
-            
-            // Map values to print layout
-            document.getElementById('outTypeLabel').innerText = type === 'invoice' ? "Bill No" : "Est No";
-            document.getElementById('outDocNo').innerText = docNo;
-            document.getElementById('outSiteName').innerText = siteName;
-            document.getElementById('outSiteAddress').innerText = siteAddress;
-            document.getElementById('outDate').innerText = invDate ? invDate.split('-').reverse().join('/') : '';
-            
-            // Signature Toggle Logic
-            const signCheckbox = document.getElementById('showSign');
-            const signImg = document.getElementById('outSignImage');
-            if (signCheckbox && signImg) {
-                signImg.style.display = signCheckbox.checked ? 'block' : 'none';
-            }
-            
-            // Generate Table Rows
-            let sub = 0;
-            let html = items.map((it, i) => {
-                let amt = it.qty * it.rate; sub += amt;
-                return <tr><td>${i+1}</td><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>;
-            });
-            
-            // Fill empty rows to make layout even
-            for(let i = items.length; i < 12; i++) {
-                html.push('<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>');
-            }
-            
-            document.getElementById('outBody').innerHTML = html.join('');
-            document.getElementById('outGrand').innerText = "₹ " + sub.toFixed(2);
-            
-            // Display Logic
-            if (!doPrint) {
-                // If it is PREVIEW mode: Hide the editor, show the invoice, and show Back button
-                document.getElementById('setupPanel').style.display = 'none';
-                document.getElementById('invoice').style.display = 'block';
-                document.getElementById('backBtn').style.display = 'block';
-                window.scrollTo(0, 0);
-            } else {
-                // If it is PRINT mode: The CSS takes care of hiding the editor. 
-                // Save to database, then print.
-                document.getElementById('invoice').style.display = 'block';
-                saveInvoiceToDatabase(type, docNo, siteName, siteAddress, invDate, items, sub);
-                setTimeout(() => { window.print(); }, 300);
-            }
-
-        } catch (error) {
-            alert("A system error prevented the preview: " + error.message);
-            console.error(error);
+        const type = document.querySelector('input[name="docType"]:checked').value;
+        const docNo = document.getElementById('docNo').value;
+        
+        document.getElementById('outTypeLabel').innerText = type === 'invoice' ? "Bill No" : "Est No";
+        document.getElementById('outDocNo').innerText = docNo;
+        document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
+        document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
+        document.getElementById('outDate').innerText = document.getElementById('invDate').value.split('-').reverse().join('/');
+        
+        // Handle Signature
+        if (document.getElementById('showSign').checked) {
+            document.getElementById('outSignImage').style.display = 'block';
+        } else {
+            document.getElementById('outSignImage').style.display = 'none';
+        }
+        
+        let sub = 0;
+        let html = items.map((it, i) => {
+            let amt = it.qty * it.rate; sub += amt;
+            return <tr><td>${i+1}</td><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>;
+        });
+        
+        for(let i=items.length; i<12; i++) html.push('<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>');
+        
+        document.getElementById('outBody').innerHTML = html.join('');
+        document.getElementById('outGrand').innerText = "₹ " + sub.toFixed(2);
+        
+        if (doPrint) {
+            saveToDatabase(docNo, sub);
+            document.getElementById('invoice').style.display = 'block';
+            setTimeout(() => { window.print(); }, 300);
+        } else {
+            document.getElementById('setupPanel').style.display = 'none';
+            document.getElementById('invoice').style.display = 'block';
         }
     }
 
-    // --- DATABASE FUNCTIONS ---
-    function saveInvoiceToDatabase(type, docNo, siteName, siteAddress, invDate, itemsList, total) {
-        if(!docNo) return; // Require a bill number to save
+    // Database Logic
+    function saveToDatabase(docNo, totalAmt) {
+        if (!docNo) return;
+        let db = JSON.parse(localStorage.getItem('my_invoices') || '[]');
+        db = db.filter(inv => inv.docNo !== docNo); // Remove old version if saving same number
         
-        let db = JSON.parse(localStorage.getItem('invoicer_db') || '[]');
-        db = db.filter(item => item.docNo !== docNo); // Remove old version if updating
+        db.unshift({
+            docNo: docNo,
+            siteName: document.getElementById('siteName').value,
+            invDate: document.getElementById('invDate').value,
+            siteAddress: document.getElementById('siteAddress').value,
+            items: JSON.parse(JSON.stringify(items)),
+            total: totalAmt
+        });
         
-        db.unshift({ type, docNo, siteName, siteAddress, invDate, items: itemsList, total });
-        localStorage.setItem('invoicer_db', JSON.stringify(db));
-        renderHistoryTable();
+        localStorage.setItem('my_invoices', JSON.stringify(db));
+        loadHistoryTable();
     }
 
-    function renderHistoryTable() {
+    function loadHistoryTable() {
+        let db = JSON.parse(localStorage.getItem('my_invoices') || '[]');
         const tbody = document.getElementById('historyBody');
-        if(!tbody) return;
         
-        let db = JSON.parse(localStorage.getItem('invoicer_db') || '[]');
         if(db.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: #888;">No saved invoices found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No saved invoices found.</td></tr>';
             return;
         }
 
-        tbody.innerHTML = db.map((rec, index) => `
+        tbody.innerHTML = db.map((inv, index) => `
             <tr>
-                <td><span class="btn-sm" style="background:${rec.type==='invoice'?'#e3f2fd':'#fff3e0'}; color:${rec.type==='invoice'?'#0d47a1':'#e65100'}">${rec.type.toUpperCase()}</span></td>
-                <td><strong>${rec.docNo}</strong></td>
-                <td>${rec.siteName || '-'}</td>
-                <td>${rec.invDate ? rec.invDate.split('-').reverse().join('/') : '-'}</td>
-                <td>₹${rec.total.toFixed(2)}</td>
+                <td><strong>${inv.docNo}</strong></td>
+                <td>${inv.siteName || '-'}</td>
+                <td>${inv.invDate || '-'}</td>
+                <td>₹${inv.total.toFixed(2)}</td>
                 <td>
-                    <button class="btn-sm" style="background:var(--primary); color:white;" onclick="loadFromDatabase(${index})">Load</button>
-                    <button class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteFromDatabase(${index})">✕</button>
+                    <button class="btn-sm" style="background:var(--primary); color:white;" onclick="loadInvoice(${index})">Load</button>
+                    <button class="btn-sm" style="background:var(--danger); color:white;" onclick="deleteInvoice(${index})">Del</button>
                 </td>
             </tr>
         `).join('');
     }
 
-    function loadFromDatabase(index) {
-        let db = JSON.parse(localStorage.getItem('invoicer_db') || '[]');
-        const rec = db[index];
-        if(!rec) return;
+    function loadInvoice(index) {
+        let db = JSON.parse(localStorage.getItem('my_invoices') || '[]');
+        let inv = db[index];
+        if(!inv) return;
 
-        const radioToSelect = document.querySelector(input[name="docType"][value="${rec.type}"]);
-        if(radioToSelect) radioToSelect.checked = true;
-        handleModeChange();
-
-        document.getElementById('docNo').value = rec.docNo || '';
-        document.getElementById('siteName').value = rec.siteName || '';
-        document.getElementById('siteAddress').value = rec.siteAddress || '';
-        document.getElementById('invDate').value = rec.invDate || '';
-
-        items = rec.items || [];
+        document.getElementById('docNo').value = inv.docNo || '';
+        document.getElementById('siteName').value = inv.siteName || '';
+        document.getElementById('invDate').value = inv.invDate || '';
+        document.getElementById('siteAddress').value = inv.siteAddress || '';
+        
+        items = inv.items || [];
         renderItemList();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo(0, 0);
     }
 
-    function deleteFromDatabase(index) {
-        if(confirm("Delete this saved invoice permanently?")) {
-            let db = JSON.parse(localStorage.getItem('invoicer_db') || '[]');
+    function deleteInvoice(index) {
+        if(confirm("Delete this invoice permanently?")) {
+            let db = JSON.parse(localStorage.getItem('my_invoices') || '[]');
             db.splice(index, 1);
-            localStorage.setItem('invoicer_db', JSON.stringify(db));
-            renderHistoryTable();
+            localStorage.setItem('my_invoices', JSON.stringify(db));
+            loadHistoryTable();
         }
     }
 </script>
@@ -414,10 +312,9 @@
 <script>
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Registration failed', err));
+            navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW Reg failed', err));
         });
     }
 </script>
-
 </body>
 </html>
