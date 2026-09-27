@@ -209,6 +209,16 @@
         `).join('');
     }
 
+    function loadSignature(event) {
+        const reader = new FileReader();
+        reader.onload = function(){
+            document.getElementById('outSignImage').src = reader.result;
+        };
+        if(event.target.files[0]){
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+    
     function showInvoice(doPrint) {
         const type = document.querySelector('input[name="docType"]:checked').value;
         
@@ -218,6 +228,7 @@
         document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
         document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
         document.getElementById('outDate').innerText = document.getElementById('invDate').value.split('-').reverse().join('/');
+        <img id="outSignImage" src="./signature.png" style="max-height: 60px; max-width: 200px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none;">
         
         let sub = 0;
         let html = items.map((it, i) => {
