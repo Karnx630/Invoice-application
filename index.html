@@ -35,7 +35,7 @@
         .btn-sm { padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; }
 
         /* Print Layout */
-        #invoice { width: 210mm; min-height: 297mm; margin: 20px auto; background: white; display: none; color: #000; border: 2px solid #000; box-sizing: border-box; }
+        #invoice { width: 210mm; min-height: 297mm; margin: 20px auto; background: white; display: none; color: #000; border: 2px solid #000; box-sizing: border-box; position: relative; }
         .inv-content { padding: 30px; }
         .top-corners-row { display: flex; justify-content: space-between; align-items: flex-start; }
         .religious-header { text-align: center; font-weight: bold; font-size: 22px; color: #d32f2f; flex-grow: 1; }
@@ -147,7 +147,8 @@
 
         <div class="signature-section">
             <div class="sig-box">
-                <img id="outSignImage" src="./signature.png" style="max-height: 60px; max-width: 200px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none;">
+                <!-- Points to signature.png on your GitHub -->
+                <img id="outSignImage" src="signature.png" alt="" style="max-height: 60px; max-width: 200px; position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); display: none;">
                 Signature of Contractor
             </div>
         </div>
@@ -205,48 +206,61 @@
     }
 
     function showInvoice(doPrint) {
-        const type = document.querySelector('input[name="docType"]:checked').value;
-        const docNo = document.getElementById('docNo').value;
-        
-        document.getElementById('outTypeLabel').innerText = type === 'invoice' ? "Bill No" : "Est No";
-        document.getElementById('outDocNo').innerText = docNo;
-        document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
-        document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
-        document.getElementById('outDate').innerText = document.getElementById('invDate').value.split('-').reverse().join('/');
-        
-        // Handle Signature
-        if (document.getElementById('showSign').checked) {
-            document.getElementById('outSignImage').style.display = 'block';
-        } else {
-            document.getElementById('outSignImage').style.display = 'none';
-        }
-        
-        let sub = 0;
-        let html = items.map((it, i) => {
-            let amt = it.qty * it.rate; sub += amt;
-            return <tr><td>${i+1}</td><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>;
-        });
-        
-        for(let i=items.length; i<12; i++) html.push('<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>');
-        
-        document.getElementById('outBody').innerHTML = html.join('');
-        document.getElementById('outGrand').innerText = "₹ " + sub.toFixed(2);
-        
-        if (doPrint) {
-            saveToDatabase(docNo, sub);
-            document.getElementById('invoice').style.display = 'block';
-            setTimeout(() => { window.print(); }, 300);
-        } else {
-            document.getElementById('setupPanel').style.display = 'none';
-            document.getElementById('invoice').style.display = 'block';
+        try {
+            const type = document.querySelector('input[name="docType"]:checked').value;
+            const docNo = document.getElementById('docNo').value;
+            
+            document.getElementById('outTypeLabel').innerText = type === 'invoice' ? "Bill No" : "Est No";
+            document.getElementById('outDocNo').innerText = docNo;
+            document.getElementById('outSiteName').innerText = document.getElementById('siteName').value;
+            document.getElementById('outSiteAddress').innerText = document.getElementById('siteAddress').value;
+            document.getElementById('outDate').innerText = document.getElementById('invDate').value.split('-').reverse().join('/');
+            
+            // Handle Signature
+            const showSignBox = document.getElementById('showSign');
+            const signImage = document.getElementById('outSignImage');
+            if (showSignBox && signImage) {
+                if (showSignBox.checked) {
+                    signImage.style.display = 'block';
+                } else {
+                    signImage.style.display = 'none';
+                }
+            }
+            
+            let sub = 0;
+            let html = items.map((it, i) => {
+                let amt = it.qty * it.rate; sub += amt;
+                return `<tr><td>${i+1}</td><td>${it.desc}</td><td>${it.unit}</td><td>${it.qty}</td><td>${it.rate}</td><td style="text-align:right">${amt.toFixed(2)}</td></tr>`;
+            });
+            
+            for(let i=items.length; i<12; i++) html.push('<tr><td>&nbsp;</td><td></td><td></td><td></td><td></td><td></td></tr>');
+            
+            document.getElementById('outBody').innerHTML = html.join('');
+            document.getElementById('outGrand').innerText = "₹ " + sub.toFixed(2);
+            
+            if (doPrint) {
+                saveToDatabase(docNo, sub);
+                document.getElementById('setupPanel').style.display = 'none';
+                document.getElementById('invoice').style.display = 'block';
+                setTimeout(() => { 
+                    window.print(); 
+                    document.getElementById('invoice').style.display = 'none';
+                    document.getElementById('setupPanel').style.display = 'block';
+                }, 300);
+            } else {
+                document.getElementById('setupPanel').style.display = 'none';
+                document.getElementById('invoice').style.display = 'block';
+            }
+        } catch (error) {
+            console.error("Preview error:", error);
         }
     }
 
-    // Database Logic
+    // Original Database Logic
     function saveToDatabase(docNo, totalAmt) {
         if (!docNo) return;
         let db = JSON.parse(localStorage.getItem('my_invoices') || '[]');
-        db = db.filter(inv => inv.docNo !== docNo); // Remove old version if saving same number
+        db = db.filter(inv => inv.docNo !== docNo); 
         
         db.unshift({
             docNo: docNo,
@@ -318,3 +332,4 @@
 </script>
 </body>
 </html>
+
