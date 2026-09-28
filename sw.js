@@ -1,4 +1,4 @@
-const CACHE_NAME = 'invoicer-pro-v4';
+const CACHE_NAME = 'invoicer-pro-v3';
 
 // Install phase: force the new service worker to take over immediately
 self.addEventListener('install', (event) => {
